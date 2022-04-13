@@ -1,22 +1,28 @@
+
+/**
+ * todo: criar a função: criaBancoDePalavras()
+ * essa função lerá o conjunto de palavras do arquivo.dat 
+ * gera uma lista ordenada decrescente
+ * antes de mandar para o ordenar, ter valores como palavra e seu tamanho
+ * para facilitar, usar uma struct que tenha os campos: palavra, tamanho da palavra
+ * 
+ **/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "palavra.h"
 
 #define TAM 20
 
 #define PAL_TAM 15
 #define PAL_LIST 20
 
+struct Palavra banco_pal[100];
+
 //registro da palavra inserida na grade
 //indica a posição dela, também há uma cópia de seus caracteres.
-struct Palavra
-{
-    int pal_x; 
-    int pal_y; 
-    int dir; 
-    int tam;  
-};
 
 
 void limpaTela(char **scrn, int linha, int col);
@@ -24,7 +30,6 @@ void limpaTela(char **scrn, int linha, int col);
 void distribuiPal(char **scrn, char palavras[PAL_TAM][PAL_LIST], int linha, int col, int np);
 void inserePalavra(char *palavra, char **tela, int dir, int x, int y);
 void atualizarTela(char **scrn, int tamx, int tamy);
-bool correpondentes(int *corresp, char *pal1, char *pal2);
 
 char lista[PAL_TAM][PAL_LIST] = {
     "Uzbequistão",
@@ -38,10 +43,10 @@ char lista[PAL_TAM][PAL_LIST] = {
 
 
 int main (){
+    carregarPalavras(banco_pal);
     //Aloca dinamicamente a tela 
     int *c = NULL; 
-    bool teste = correpondentes(c, "Teste", "Teste");
-    printf("%d",c[0]); 
+    bool teste = interseccao(&c, "Teste", "JOAO");
 
     char **tela = (char **)malloc(TAM * sizeof(char *));
     for (int i = 0; i<TAM; i++){
@@ -111,31 +116,4 @@ void distribuiPal(char **scrn, char palavras[PAL_TAM][PAL_LIST], int linha, int 
 
 }
 
-bool correpondentes(int *corresp, char *pal1, char *pal2){
-    //pegar o tamanho das duas palavras
-    int pal1Tam = strlen(pal1);
-    int pal2Tam = strlen(pal2);
-    //tá funcionando a leitura dos tamanhos 
-    //printf("Tamanho das palavras: %d, %d", pal1Tam, pal2Tam);
-    corresp = malloc(sizeof(int) * pal1Tam);
-    bool tem = false; 
-
-    //fazer o comparador de correpondência:
-    for (int i = 0; i<pal1Tam; i++){
-        corresp[i] = 0; 
-        for (int j = 0; j<pal2Tam; j++){
-            if (pal1[i] == pal2[j]){
-                tem = true; 
-                corresp[i]++; 
-            }
-        }
-
-    }
-
-    for (int j = 0; j<pal1Tam; j++){
-        printf("%d\n", corresp[j]);
-    }
-
-    return tem;
-}
 
