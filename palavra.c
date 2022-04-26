@@ -30,9 +30,6 @@ void carregarPalavras(struct Palavra palavras[]){
         }
         
     }
-
-
-
     fclose(stream);
 
 }

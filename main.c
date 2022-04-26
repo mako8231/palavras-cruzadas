@@ -13,6 +13,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include "palavra.h"
+#include "pilha.h"
+
 
 #define TAM 20
 
@@ -44,6 +46,13 @@ char lista[PAL_TAM][PAL_LIST] = {
 
 int main (){
     carregarPalavras(banco_pal);
+    struct Pilha pilha;
+    pilha.palavras = NULL;  
+    empilhar(&pilha, "Masao");
+    empilhar(&pilha, "João");
+    empilhar(&pilha, "Maria");
+    desempilhar(&pilha);
+    imprimirString(pilha);
     //Aloca dinamicamente a tela 
     int *c = NULL; 
     bool teste = interseccao(&c, "Teste", "JOAO");
@@ -110,7 +119,7 @@ void distribuiPal(char **scrn, char palavras[PAL_TAM][PAL_LIST], int linha, int 
 
     //pega a metade da palavra 
     int metadePal = strlen(palavras[0])/2;
-    inserePalavra(palavras[0], scrn, -1, telaX, telaY - metadePal);
+    inserePalavra(banco_pal[0].word, scrn, -1, telaX, telaY - metadePal);
 
     //distribui as demais palavras 
 

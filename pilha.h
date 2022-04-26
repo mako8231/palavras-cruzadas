@@ -1,18 +1,25 @@
 #ifndef PILHA_H_
 #define PILHA_H_
+#include "palavra.h"
+
+struct Pilha
+{
+    struct Palavra* palavras;
+    int tam;  
+};
+
 
 //pilha de caracteres 
+//que deverá funcionar com alocação de memória dinâmica 
 //debug
-void imprimePilha(char *pilha);
-//tamanho da pilha 
-int tamPilha(char *pilha);
-//criar um ponteiro de caracteres do tipo vetor
-void incializarPilha(char val, char *pilha);
-//copiar valores de um vetor para uma pilha
-void copiarPilha(int tam, char *copia, char *pilha);
-//inserir o valor no final da pilha
-void empilhar(char valor, char *pilha);
-//remover o ultimo valor no topo da pilha
-void desempilhar(char *pilha);
+
+//empilha a struct de palavra na pilha, última que entra é a primeira que sai 
+void empilhar(struct Pilha *pilha, char *valor);
+//remove a última palavra inserida e redimensiona o vetor 
+void desempilhar(struct Pilha *pilha);
+//apagar a pilha da memória 
+void apagar(struct Pilha *pilha);
+//imprimir os valores da pilha
+void imprimirString(struct Pilha pilha);
 
 #endif 
