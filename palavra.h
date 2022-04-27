@@ -5,7 +5,7 @@
 struct Palavra
 {
     int tam;  
-    char word[100];
+    char campo[100];
 };
 
 

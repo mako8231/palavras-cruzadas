@@ -13,7 +13,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "palavra.h"
-#include "pilha.h"
+#include "lista.h"
 
 
 #define TAM 20
@@ -33,7 +33,7 @@ void distribuiPal(char **scrn, char palavras[PAL_TAM][PAL_LIST], int linha, int 
 void inserePalavra(char *palavra, char **tela, int dir, int x, int y);
 void atualizarTela(char **scrn, int tamx, int tamy);
 
-char lista[PAL_TAM][PAL_LIST] = {
+char lista_pal[PAL_TAM][PAL_LIST] = {
     "Uzbequistão",
     "Malásia",
     "Europa",
@@ -46,13 +46,13 @@ char lista[PAL_TAM][PAL_LIST] = {
 
 int main (){
     carregarPalavras(banco_pal);
-    struct Pilha pilha;
-    pilha.palavras = NULL;  
-    empilhar(&pilha, "Masao");
-    empilhar(&pilha, "João");
-    empilhar(&pilha, "Maria");
-    desempilhar(&pilha);
-    imprimirString(pilha);
+    
+    lista * l = inciaLista();
+    l = empilhaLista(l, "Teste");
+    imprimirLista(l);
+    l = desempilhaLista(l);
+    imprimirLista(l);
+
     //Aloca dinamicamente a tela 
     int *c = NULL; 
     bool teste = interseccao(&c, "Teste", "JOAO");
@@ -65,7 +65,7 @@ int main (){
     limpaTela(tela, TAM, TAM);    
     //inserePalavra("Teste", tela, 1, 0, 0);
     //atualizarTela(tela, TAM, TAM);
-    distribuiPal(tela, lista, TAM, TAM, 0);
+    distribuiPal(tela, lista_pal, TAM, TAM, 0);
     atualizarTela(tela, TAM, TAM);
     
 }
@@ -119,7 +119,7 @@ void distribuiPal(char **scrn, char palavras[PAL_TAM][PAL_LIST], int linha, int 
 
     //pega a metade da palavra 
     int metadePal = strlen(palavras[0])/2;
-    inserePalavra(banco_pal[0].word, scrn, -1, telaX, telaY - metadePal);
+    inserePalavra(banco_pal[0].campo, scrn, -1, telaX, telaY - metadePal);
 
     //distribui as demais palavras 
 

@@ -20,12 +20,12 @@ void carregarPalavras(struct Palavra palavras[]){
     while((character = getc(stream)) != EOF){
         if (character == '\n' || character == ' ' || character == '\t'){ 
             printf("quebra de linha\n");
-            palavras[linhas].tam = strlen(palavras[linhas].word);
-            printf("Palavra: %s, Indice: %d, Linha: %d, Tamanho: %d\n", palavras[linhas].word, i, linhas, palavras[linhas].tam);
+            palavras[linhas].tam = strlen(palavras[linhas].campo);
+            printf("Palavra: %s, Indice: %d, Linha: %d, Tamanho: %d\n", palavras[linhas].campo, i, linhas, palavras[linhas].tam);
             linhas ++;
             i = 0;
         } else {
-            palavras[linhas].word[i] = character;
+            palavras[linhas].campo[i] = character;
             i++;
         }
         
