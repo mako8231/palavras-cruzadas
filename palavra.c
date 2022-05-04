@@ -1,63 +1,100 @@
-#include <stdio.h>
-#include "palavra.h"
-#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include "palavra.h"
 
-void carregarPalavras(struct Palavra palavras[]){
-        //carrega o arquivo
-    FILE *stream; 
-    int character;  
-    int linhas = 0; 
+
+void carregarBancoPal(char * caminho, BancoPal * banco){
+    banco->listaPalavras = iniciaLista();
+    banco->pilhaPalavras = iniciaLista();
+    
+    FILE * stream;
+    int caractere;
+    int linhas = 0;
     int i = 0;
+    char aux[PAL_TAM];
 
-    stream = fopen("banco_pal.txt", "rt");
+    stream = fopen(caminho, "rt");
     if (!stream){
-        printf("Não foi possível abrir o arquivo");
-        return; 
+        printf("Não foi possível abrir o arquivo\n");
+        return;
+    } 
+
+    for (int j = 0; j<PAL_TAM; j++){
+        aux[j] = 0;
     }
 
-    while((character = getc(stream)) != EOF){
-        if (character == '\n' || character == ' ' || character == '\t'){ 
-            printf("quebra de linha\n");
-            palavras[linhas].tam = strlen(palavras[linhas].campo);
-            printf("Palavra: %s, Indice: %d, Linha: %d, Tamanho: %d\n", palavras[linhas].campo, i, linhas, palavras[linhas].tam);
-            linhas ++;
+    while((caractere = getc(stream)) != EOF){
+        //inserção caractere por caractere 
+        if (caractere == '\n' || caractere == ' ' || caractere == '\t'){
+            //empilha a palavra
+            banco->listaPalavras = empilhaLista(banco->listaPalavras, aux);
+            for (int j = 0; j<PAL_TAM; j++){
+                aux[j] = 0;
+            }
             i = 0;
         } else {
-            palavras[linhas].campo[i] = character;
+            aux[i] = caractere;
             i++;
         }
-        
     }
-    fclose(stream);
+
 
 }
 
-bool interseccao(int **corresp, char *pal1, char *pal2){
-    //pegar o tamanho das duas palavras
-    int pal1Tam = strlen(pal1);
-    int pal2Tam = strlen(pal2);
-    //tá funcionando a leitura dos tamanhos 
-    //printf("Tamanho das palavras: %d, %d", pal1Tam, pal2Tam);
-    (*corresp) = malloc(sizeof(int) * pal1Tam);
-    bool tem = false; 
+ListaPal * iniciaLista(){
+    return NULL; 
+}
 
-    //fazer o comparador de correpondência:
-    for (int i = 0; i<pal1Tam; i++){
-        (*corresp)[i] = 0; 
-        for (int j = 0; j<pal2Tam; j++){
-            if (pal1[i] == pal2[j]){
-                tem = true; 
-                (*corresp)[i]++; 
-            }
-        }
+ListaPal * empilhaLista(ListaPal * l, char * str){
+    //inserção no fim
+    ListaPal * nova_lista = iniciaLista();
+    ListaPal * aux = l; 
 
+    nova_lista = (ListaPal *)malloc(sizeof(ListaPal));
+    strcpy(nova_lista->p.str, str);
+    nova_lista->p.tam = strlen(str);
+    nova_lista->prox = NULL;
+
+    if (l == NULL){
+        l = nova_lista;
+        return l; 
     }
 
-    // for (int j = 0; j<pal1Tam; j++){
-    //     printf("%d\n", (*corresp)[j]);
-    // }
+    while(aux->prox != NULL){
+        aux = aux->prox;
+    }
 
-    return tem;
+    aux->prox = nova_lista;
+    return l;
 }
+
+ListaPal * desempilhaLista(ListaPal * l){
+    //remoção no fim
+    if (l == NULL){
+        printf("A lista já está vazia\n");
+        return NULL; 
+    }
+
+    ListaPal * aux = l; 
+    ListaPal * anterior = NULL; 
+    while (aux->prox != NULL){
+        anterior = aux;
+        aux = aux->prox;
+    }
+
+    free(aux);
+    aux = NULL; 
+    anterior->prox = NULL; 
+    return l; 
+    
+}
+
+void imprimirLista(ListaPal * l){
+    ListaPal * aux = l; 
+    while(aux != NULL){
+        printf("%s\n", aux->p.str);
+        aux = aux->prox;
+    }
+}
+
