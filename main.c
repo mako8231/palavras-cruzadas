@@ -13,8 +13,8 @@ int main(){
     //carregar o banco de palavras do arquivo
     BancoPal banco; 
     carregarBancoPal("banco_pal.txt", &banco);
-    imprimirLista(banco.listaPalavras);
     inserirPrimeiraPalavra(banco, &t, true);
+    distribuirPalavras(banco, &t, "a", true);
     desenharTela(t);
     
 

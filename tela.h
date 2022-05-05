@@ -20,13 +20,20 @@ typedef struct Tela {
     NoPalavra * palavrasTela;
 } Tela; 
 
+typedef struct Intereseccao {
+    int * str_endereco; //endereço na posição da string
+    int * tela_endereco; //endereço na posição da palavra na tela
+} Intereseccao;
+
 Tela inicializarTela();
 void desenharTela(Tela t);
 void inserirCaractere(Tela * t, char valor, int linha, int coluna);
 void inserirPalavra(Tela *t, char * palavra, int linha, int coluna, bool horizontal);
-void distribuirPalavras(Tela *t, char *palavra, bool horizontal);
+void distribuirPalavras(BancoPal banco, Tela *t, char *palavra, bool horizontal);
 NoPalavra * inserirLista(Tela *t, char * palavra, int linha, int coluna, bool horizontal);
 int listaTam(Tela *t);
 void inserirPrimeiraPalavra(BancoPal banco, Tela * t, bool horizontal);
+void imprimirPalavrasNaTela(Tela t);
+bool interssecta(Tela t, NoPalavra * palavra_atual, char *palavra_alvo, char *interssectando, Intereseccao *ocorrencias);
 
 #endif

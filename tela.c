@@ -93,6 +93,93 @@ void inserirPrimeiraPalavra(BancoPal banco, Tela * t, bool horizontal){
     //calcular a metade da palavra
     int m_tamanho = (banco.listaPalavras->p.tam)/2;
     inserirPalavra(t, banco.listaPalavras->p.str, m_linha - (m_tamanho * !horizontal), m_col - (m_tamanho * horizontal), horizontal);
+    imprimirPalavrasNaTela(*t);
 }
 
+void distribuirPalavras(BancoPal banco, Tela *t, char *palavra, bool horizontal){
+    //pega a palavra atual inserida
+    NoPalavra * palavra_atual = t->palavrasTela;
+    ListaPal * listaPalavras = banco.listaPalavras->prox;
+    ListaPal * pilhaPalavras = banco.pilhaPalavras;
+    //pega a próxima palavra no banco 
+    while (listaPalavras->prox != NULL)
+    {
+        //verifica se há interessecções 
+        Intereseccao ocorrencias; 
+        bool inter = interssecta(*t, palavra_atual, palavra_atual->palavra.str, listaPalavras->p.str, &ocorrencias);
+        if (inter){
+            printf("Há interssecção, teste ocorrência:\n");
+            for (int i = 0; i<strlen(listaPalavras->p.str); i++){
+                printf("Endereço na posição: %d\n", ocorrencias.str_endereco[i]);
+                printf("Endereço na Tela: %d\n", ocorrencias.tela_endereco[i]);
+                
+            }
+             
+        } else {
+            printf("Não há interssecção\n");
+        }
+
+        listaPalavras = listaPalavras->prox;
+        free(ocorrencias.str_endereco);
+        free(ocorrencias.tela_endereco);
+    }
+    
+}
+
+bool interssecta(Tela t, NoPalavra * palavra_atual, char *palavra_alvo, char *interssectando, Intereseccao *ocorrencias){
+    int tam_alvo = strlen(palavra_alvo);
+    int tam_inter = strlen(interssectando); 
+
+    int pos_grade_linha = palavra_atual->pos_linha;
+    int pos_grade_coluna = palavra_atual->pos_coluna;
+
+    bool horizontal = palavra_atual->horizontal;
+    int n_inter = 0;
+    //int n_ocorren = 0; //numero de ocorrencias por palavra
+
+    int * ocorr_pal = (int *) malloc(sizeof(int) * tam_inter);
+    int * ocorr_tela = (int *) malloc(sizeof(int) * tam_inter);
+
+    //inicializa os vetores
+    for (int i = 0; i<tam_inter; i++){
+        ocorr_pal[i] = -1;
+        ocorr_tela[i] = -1;
+    }
+
+
+    for (int j = 0; j<tam_inter; j++){
+        for (int i=0; i<tam_alvo; i++){
+            if (palavra_alvo[i] == interssectando[j]){
+                n_inter++;
+                ocorr_pal[j] = i;
+                if (!horizontal){
+                    ocorr_tela[j] = i + pos_grade_linha;
+                } else {
+                    ocorr_tela[j] = i + pos_grade_coluna;
+                }
+            }
+            
+        }
+    }
+
+    ocorrencias->str_endereco = ocorr_pal;
+    ocorrencias->tela_endereco = ocorr_tela;
+    return (n_inter > 0);
+}
+
+void imprimirPalavrasNaTela(Tela t){
+    NoPalavra * aux = t.palavrasTela;
+    while (aux != NULL)
+    {
+        printf("Palavra: %s\n", aux->palavra.str);
+        printf("Tamanho: %d\n", aux->palavra.tam);
+        printf("Endereço linha: %d\n", aux->pos_linha);
+        printf("Endereço coluna: %d\n", aux->pos_coluna);
+        printf("Horizontal?: %d\n", aux->horizontal);
+
+        
+        aux = aux->prox;
+    }
+    
+}
 
