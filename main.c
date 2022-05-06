@@ -15,7 +15,6 @@ int main(){
     carregarBancoPal("banco_pal.txt", &banco);
     inserirPrimeiraPalavra(banco, &t, true);
     distribuirPalavras(banco, &t, "a", true);
-    desenharTela(t);
     
 
     return 0; 

@@ -2,8 +2,8 @@
 #define TELA_H
 #include "palavra.h"
 
-#define LINHAS 21
-#define COLUNAS 21
+#define LINHAS 41
+#define COLUNAS 41
 
 #include <stdbool.h>
 
@@ -22,7 +22,8 @@ typedef struct Tela {
 
 typedef struct Intereseccao {
     int * str_endereco; //endereço na posição da string
-    int * tela_endereco; //endereço na posição da palavra na tela
+    int * tela_endereco_linha; //endereço na posição da palavra na tela
+    int * tela_endereco_coluna;
 } Intereseccao;
 
 Tela inicializarTela();

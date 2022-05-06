@@ -108,20 +108,63 @@ void distribuirPalavras(BancoPal banco, Tela *t, char *palavra, bool horizontal)
         Intereseccao ocorrencias; 
         bool inter = interssecta(*t, palavra_atual, palavra_atual->palavra.str, listaPalavras->p.str, &ocorrencias);
         if (inter){
-            printf("Há interssecção, teste ocorrência:\n");
-            for (int i = 0; i<strlen(listaPalavras->p.str); i++){
-                printf("Endereço na posição: %d\n", ocorrencias.str_endereco[i]);
-                printf("Endereço na Tela: %d\n", ocorrencias.tela_endereco[i]);
+            // printf("Há interssecção, teste ocorrência:\n");
+            
+            // for (int i = 0; i<strlen(listaPalavras->p.str); i++){
+            //     printf("Endereço na posição: %d\n", ocorrencias.str_endereco[i]);
+            //     printf("Endereço na Tela (linha): %d\n", ocorrencias.tela_endereco_linha[i]);
+            //     printf("Endereço na Tela (coluna): %d\n", ocorrencias.tela_endereco_coluna[i]);
                 
+            // }
+            int endereco_ocorrencia = 0;
+            int tela_ocorrencia_linha = 0;
+            int tela_ocorrencia_coluna = 0;
+            int posicao_interssect = 0;
+            for (int i = 0; i<palavra_atual->palavra.tam; i++){
+                //procurar pela primeira ocorrência 
+                if (ocorrencias.str_endereco[i] > -1){
+                    posicao_interssect = i;
+                    endereco_ocorrencia = ocorrencias.str_endereco[i];
+                    tela_ocorrencia_linha = ocorrencias.tela_endereco_linha[i];
+                    tela_ocorrencia_coluna = ocorrencias.tela_endereco_coluna[i];
+                    break;
+                }
             }
+
+            printf("posição da intersecção: %d\n", posicao_interssect);
+            printf("endereço da ocorrência: %d\n", endereco_ocorrencia);
+            printf("posição da tela (linha): %d\n", tela_ocorrencia_linha);
+            printf("posição da tela (coluna): %d\n", tela_ocorrencia_coluna);
+            
+
+            if (palavra_atual->horizontal){
+                //calcular a posição inicial:
+                int linha_inicial = 0;
+                linha_inicial = tela_ocorrencia_linha - posicao_interssect;
+                inserirPalavra(t, listaPalavras->p.str, linha_inicial, tela_ocorrencia_coluna, !palavra_atual->horizontal);
+            } else {
+                //calcular a posição inicial:
+                int col_inicial = 0;
+                col_inicial = tela_ocorrencia_coluna - posicao_interssect;
+                inserirPalavra(t, listaPalavras->p.str, tela_ocorrencia_linha, col_inicial, !palavra_atual->horizontal);
+            }
+
+
              
         } else {
             printf("Não há interssecção\n");
         }
 
+
+        palavra_atual = palavra_atual->prox;
         listaPalavras = listaPalavras->prox;
+        desenharTela(*t);
+        printf("\n");
+        //liberando a memória alocada
         free(ocorrencias.str_endereco);
-        free(ocorrencias.tela_endereco);
+        free(ocorrencias.tela_endereco_linha);
+        free(ocorrencias.tela_endereco_coluna);
+        
     }
     
 }
@@ -138,12 +181,15 @@ bool interssecta(Tela t, NoPalavra * palavra_atual, char *palavra_alvo, char *in
     //int n_ocorren = 0; //numero de ocorrencias por palavra
 
     int * ocorr_pal = (int *) malloc(sizeof(int) * tam_inter);
-    int * ocorr_tela = (int *) malloc(sizeof(int) * tam_inter);
+    int * ocorr_tela_linha = (int *) malloc(sizeof(int) * tam_inter);
+    int * ocorr_tela_coluna = (int *) malloc(sizeof(int) * tam_inter);
+    
 
     //inicializa os vetores
     for (int i = 0; i<tam_inter; i++){
         ocorr_pal[i] = -1;
-        ocorr_tela[i] = -1;
+        ocorr_tela_linha[i] = -1;
+        ocorr_tela_coluna[i] = -1;
     }
 
 
@@ -153,9 +199,11 @@ bool interssecta(Tela t, NoPalavra * palavra_atual, char *palavra_alvo, char *in
                 n_inter++;
                 ocorr_pal[j] = i;
                 if (!horizontal){
-                    ocorr_tela[j] = i + pos_grade_linha;
+                    ocorr_tela_linha[j] = i + pos_grade_linha;
+                    ocorr_tela_coluna[j] = pos_grade_coluna;
                 } else {
-                    ocorr_tela[j] = i + pos_grade_coluna;
+                    ocorr_tela_coluna[j] = i + pos_grade_coluna;
+                    ocorr_tela_linha[j] = pos_grade_linha;
                 }
             }
             
@@ -163,7 +211,8 @@ bool interssecta(Tela t, NoPalavra * palavra_atual, char *palavra_alvo, char *in
     }
 
     ocorrencias->str_endereco = ocorr_pal;
-    ocorrencias->tela_endereco = ocorr_tela;
+    ocorrencias->tela_endereco_linha = ocorr_tela_linha;
+    ocorrencias->tela_endereco_coluna = ocorr_tela_coluna;
     return (n_inter > 0);
 }
 
